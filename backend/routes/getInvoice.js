@@ -6,7 +6,12 @@ const apiRouter = express.Router();
 apiRouter.use(bodyParser.json());
 
 apiRouter.route("/").post((req, res, next) => {
-
+  // `/get` Request
+  /* Sample Body
+  {
+   email: ""
+  }
+  */
   //validate user response
   const validationRule = {
     email: "required|string|email"
@@ -33,7 +38,7 @@ apiRouter.route("/").post((req, res, next) => {
     User.find({ email: req.body.email })
       .then((callbackData) => {
         if (callbackData.length != 0) {
-          //new logic to insert data
+          //new logic to find data for sent email
           Invoice.find({ email: req.body.email }).then(
             (invoiceData) => {
               res.status(200).send({

@@ -10,8 +10,21 @@ require("dotenv").config();
 const Insta = require("instamojo-nodejs");
 
 apiRouter.route("/").post((req, res, next) => {
-  console.log("payInvoice");
-  //console.log(req.body);
+  // `/pay` Request
+  /* Sample Body
+  {
+    invoiceData: {
+      buyer_name: '',
+      email: '',
+      phone: '',
+      redirect_url: '',
+      purpose: '',
+      amount: ''
+    }
+  }
+  */
+
+  console.log(req.body);
 
   Insta.setKeys(process.env.INSTA_API_KEY, process.env.INSTA_AUTH_KEY);
   const instaPay = new Insta.PaymentData();
@@ -25,7 +38,6 @@ apiRouter.route("/").post((req, res, next) => {
   payObj.send_sms = "False";
   payObj.send_email = "False";
   payObj.allow_repeated_payments = "False";
-  //   payObj.webhook = req.body.invoiceData.webhook_url;
   payObj.webhook =
     process.env.PORT == undefined
       ? ""
@@ -33,39 +45,39 @@ apiRouter.route("/").post((req, res, next) => {
   payObj.redirect_url = req.body.invoiceData.redirect_url;
   payObj.purpose = req.body.invoiceData.purpose;
   payObj.amount = req.body.invoiceData.amount;
-  //console.log("here", req.body.invoiceData);
 
   Insta.createPayment(payObj, function (error, response) {
     if (error) {
       // some error
-      console.log(error, "here");
+      console.log(error, "Some Error Occured");
     } else {
       // Payment redirection link at response.payment_request.longurl
       /*
+      * sample response structure
       {
-    "success": true,
-    "payment_request": {
-        "id": "091216c655cd47fcb0f89210fd2ce2ae",
-        "phone": "+918579961909",
-        "email": "ankit@gmail.com",
-        "buyer_name": "ankit039",
-        "amount": "23673.00",
-        "purpose": "Sigma",
-        "expires_at": null,
-        "status": "Pending",
-        "send_sms": false,
-        "send_email": false,
-        "sms_status": null,
-        "email_status": null,
-        "shorturl": null,
-        "longurl": "https://test.instamojo.com/@thilhanda/091216c655cd47fcb0f89210fd2ce2ae",
-        "redirect_url": "http://localhost:4000/api/pay/callback?id=6427fdae3d53d24e1f247193",
-        "webhook": "https://codepadapp.netlify.app/",
-        "allow_repeated_payments": false,
-        "created_at": "2023-04-01T11:22:17.402848Z",
-        "modified_at": "2023-04-01T11:22:17.402874Z"
-    }
-}
+        "success": true,
+        "payment_request": {
+            "id": "",
+            "phone": "",
+            "email": "",
+            "buyer_name": "",
+            "amount": "",
+            "purpose": "",
+            "expires_at": null,
+            "status": "",
+            "send_sms": false,
+            "send_email": false,
+            "sms_status": null,
+            "email_status": null,
+            "shorturl": null,
+            "longurl": "",
+            "redirect_url": "",
+            "webhook": "",
+            "allow_repeated_payments": false,
+            "created_at": "",
+            "modified_at": ""
+        }
+      }
       */
       response = JSON.parse(response);
       var resObj = {
@@ -104,11 +116,14 @@ apiRouter.route("/").post((req, res, next) => {
 });
 
 apiRouter.route("/callback").get((req, res, next) => {
-  /* http://localhost:4000/api/pay/callback?
-    id=642820996c35daf3b8d7d915&
-    payment_id=MOJO3401T05A52992287&
-    payment_status=Credit&
-    payment_request_id=0708c313f1e34738b721525fdb67fab9 */
+  // `/pay/callback` Request
+  /* 
+  * Sample URL Structure
+  http://localhost:4000/api/pay/callback?
+    id=&
+    payment_id=&
+    payment_status=&
+    payment_request_id= */
   console.log("payInvoiceCallback");
   var resObj = {
     payment_id: req.query.payment_id,
@@ -136,22 +151,24 @@ apiRouter.route("/callback").get((req, res, next) => {
 });
 
 apiRouter.route("/webhook").post((req, res, next) => {
+  // `/pay/webhook` Request
   console.log("WebHook");
   /*
+  * Sample Response Structure
   {
-    payment_id: 'MOJO3401O05A52992310',
-    status: 'Credit',
+    payment_id: '',
+    status: '',
     shorturl: '',
-    longurl: 'https://test.instamojo.com/@thilhanda/cda4fe70cf28447898ca245300df5b7c',
-    purpose: 'Product 5',
-    amount: '100.00',
-    fees: '1.90',
-    currency: 'INR',
-    buyer: 'ankit@gmail.com',
-    buyer_name: 'ankit039',
-    buyer_phone: '+918579961909',
-    payment_request_id: 'cda4fe70cf28447898ca245300df5b7c',
-    mac: 'edcf600beb70655970647faad970b368f92abaf3'
+    longurl: '',
+    purpose: '',
+    amount: '',
+    fees: '',
+    currency: '',
+    buyer: '',
+    buyer_name: '',
+    buyer_phone: '',
+    payment_request_id: '',
+    mac: ''
   }
   */
 
@@ -172,11 +189,12 @@ apiRouter.route("/webhook").post((req, res, next) => {
         buyer_phone: req.body.buyer_phone,
         payment_request_id: req.body.payment_request_id,
         mac: req.body.mac,
-      }
+      },
     }
-  ).exec()
+  )
+    .exec()
     .then((data) => {
-      console.log(data)
+      console.log(data);
       console.log(
         "Payment ID-> ",
         req.body.payment_id,

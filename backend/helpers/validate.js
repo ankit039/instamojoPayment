@@ -1,3 +1,4 @@
+// Helper function to validate User Response
 const Validator = require('validatorjs');
 const validator = async (body, rules, customMessages, callback) => {
     const validation = new Validator(body, rules, customMessages);

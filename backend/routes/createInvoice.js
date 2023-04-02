@@ -1,15 +1,3 @@
-// const express = require("express");
-// var bodyParser = require("body-parser");
-
-// const apiRouter = express.Router();
-// apiRouter.use(bodyParser.json());
-
-// apiRouter.route("/").post((req, res, next) => {
-//     console.log("createInvoice")
-// });
-
-// module.exports = apiRouter;
-
 const express = require("express");
 var bodyParser = require("body-parser");
 const validator = require("../helpers/validate");
@@ -21,6 +9,17 @@ const User = require("../models/userModel");
 const Invoice = require("../models/invoiceModel");
 
 apiRouter.route("/").post((req, res, next) => {
+   // `/create` Request
+   /*
+   * Sample Body
+   {
+    username: "",
+    email: "",
+    phone: "",
+    purpose: "",
+    amount: ""
+   }
+   */
   console.log("createInvoice");
 
   //validate user response
@@ -52,7 +51,7 @@ apiRouter.route("/").post((req, res, next) => {
     User.find({ email: req.body.email })
       .then((callbackData) => {
         if (callbackData.length != 0) {
-          //new logic to insert data
+          //new logic to insert data in Invoice Model
           Invoice.create(req.body).then((invoiceData) => {
             res.status(200).send({
               success: true,

@@ -8,6 +8,12 @@ apiRouter.use(bodyParser.json());
 const User = require("../models/userModel");
 
 apiRouter.route("/").post((req, res, next) => {
+  // `/login` Request
+  /* Sample Body
+  {
+   email: ""
+  }
+  */
   console.log("login");
 
   //validate user response

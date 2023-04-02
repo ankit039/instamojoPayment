@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-var bodyParser = require('body-parser');
+var bodyParser = require("body-parser");
 var cors = require("cors");
 
 require("dotenv").config();
@@ -11,10 +11,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 if (process.env.PORT == undefined) {
-  //cors connection
+  //cors connection Local
   console.log("Localhost Cors Applied");
   var whitelist = [
-    "http://localhost:3000",
+    "http://localhost:3000", 
     "http://localhost:4000"
   ];
   var corsOptions = {
@@ -28,9 +28,13 @@ if (process.env.PORT == undefined) {
     },
   };
 } else {
-  //cors connections
+  //cors connections Cloud
   console.log("Heroku Cors Applied");
-  var whitelist = ["https://instamojo.com","https://instafronend.onrender.com","http://localhost:3000","https://instapayfrontend.netlify.app"];
+  var whitelist = [
+    "https://instamojo.com",
+    "http://localhost:3000",
+    "https://instapayfrontend.netlify.app"
+  ];
   var corsOptions = {
     origin: function (origin, callback) {
       if (whitelist.indexOf(origin) !== -1 || !origin) {
@@ -46,7 +50,7 @@ if (process.env.PORT == undefined) {
 //mongo connection
 const connect = mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
 });
 
 connect.then(

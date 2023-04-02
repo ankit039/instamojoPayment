@@ -8,6 +8,7 @@ apiRouter.use(bodyParser.json());
 const User = require("../models/userModel");
 
 apiRouter.route("/").post((req, res, next) => {
+  // `/signup` Request
   console.log("signup");
 
   //validate user response
@@ -39,10 +40,10 @@ apiRouter.route("/").post((req, res, next) => {
         if (callbackData.length == 0) {
           User.create(req.body)
             .then((signupData) => {
-                res.status(412).send({
-                    success: false,
-                    message: "User Exists",
-                  });
+              res.status(412).send({
+                success: false,
+                message: "User Exists",
+              });
             })
             .catch((err) => {
               res.status(412).send({
