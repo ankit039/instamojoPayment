@@ -21,6 +21,7 @@ function InvoicePageComponent() {
   var loadOnce = false;
   const [invoiceData, setInvoiceData] = React.useState([]);
 
+  //fetch all invoice assoiciated with email
   useEffect(() => {
     fetch(`${api}/get`, {
       method: "POST",
@@ -40,6 +41,7 @@ function InvoicePageComponent() {
       });
   }, [loadOnce]);
 
+  //handle CTA clicks on Invoice Page
   const handlePayInvoice = (invoiceData) => {
     console.log(invoiceData);
     invoiceData.redirect_url = api + `/pay/callback?id=${invoiceData._id}`;

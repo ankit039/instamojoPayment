@@ -30,12 +30,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 function HomePageComponent() {
   const [email, setEmail] = React.useState("");
 
+  //check if localStorage.getItem("instamojo-email") already exists redirect to `/invoice`
   useEffect(()=>{
    if(localStorage.getItem("instamojo-email")!=null){
     window.location.href = "/invoice";
    }
   },[])
 
+  //sending data to `/login` on backend servers
   const loginHandler = (ev) => {
     ev.preventDefault();
     if (!email) {
